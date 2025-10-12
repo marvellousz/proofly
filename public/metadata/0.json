@@ -1,0 +1,9 @@
+{
+  "name": "Certificate of Completion",
+  "description": "Awarded to Alice for completing Blockchain 101",
+  "studentName": "Alice Johnson",
+  "course": "Blockchain 101",
+  "grade": "A",
+  "issueDate": "2025-10-12",
+  "university": "Example University"
+}
