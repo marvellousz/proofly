@@ -17,8 +17,8 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
   }
 
   return (
-    <div className={`bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 border-2 transition-all hover:scale-[1.02] ${
-      isRevoked ? 'border-red-500 opacity-60' : 'border-gray-700 hover:border-blue-500'
+    <div className={`relative overflow-hidden bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl p-6 border transition-all hover:scale-[1.02] backdrop-blur-sm ${
+      isRevoked ? 'border-red-500/50 opacity-60' : 'border-white/10 hover:border-purple-500/50'
     }`}>
       {isRevoked && (
         <div className="flex items-center gap-2 bg-red-900/30 text-red-400 px-3 py-2 rounded-lg mb-4 text-sm">

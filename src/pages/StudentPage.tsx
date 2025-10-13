@@ -60,11 +60,11 @@ export default function StudentPage() {
   }, [studentAddress]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <nav className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-900">
+      <nav className="bg-slate-800/50 backdrop-blur-sm border-b border-slate-700">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <GraduationCap size={28} className="text-green-500" />
+            <GraduationCap size={28} className="text-slate-500" />
             <h1 className="text-2xl font-bold text-white">My Certificates</h1>
           </div>
           <WalletConnect onConnect={setStudentAddress} connectedAddress={studentAddress} />
@@ -74,7 +74,7 @@ export default function StudentPage() {
       <div className="max-w-7xl mx-auto px-6 py-12">
         {!studentAddress ? (
           <div className="text-center py-20">
-            <GraduationCap size={80} className="mx-auto text-gray-600 mb-6" />
+            <GraduationCap size={80} className="mx-auto text-slate-600 mb-6" />
             <h2 className="text-3xl font-bold text-white mb-3">View Your Certificates</h2>
             <p className="text-gray-400 text-lg mb-8">
               Connect your wallet to see all certificates issued to you
@@ -82,12 +82,12 @@ export default function StudentPage() {
           </div>
         ) : isLoading ? (
           <div className="text-center py-20">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-slate-500 mx-auto mb-4"></div>
             <p className="text-gray-400">Loading certificates...</p>
           </div>
         ) : certificates.length === 0 ? (
           <div className="text-center py-20">
-            <GraduationCap size={80} className="mx-auto text-gray-600 mb-6" />
+            <GraduationCap size={80} className="mx-auto text-slate-600 mb-6" />
             <h2 className="text-2xl font-bold text-white mb-3">No Certificates Yet</h2>
             <p className="text-gray-400">You don't have any certificates in this wallet</p>
           </div>

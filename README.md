@@ -1,6 +1,6 @@
 # NFT-Based Certificate Issuer
 
-A full-stack blockchain application for issuing tamper-proof educational certificates as NFTs using Ethereum smart contracts. The system runs entirely offline on a local blockchain with zero gas costs.
+A complete full-stack blockchain application for issuing tamper-proof educational certificates as NFTs using Ethereum smart contracts. The system runs entirely offline on a local blockchain with zero gas costs.
 
 ## Overview
 
@@ -13,90 +13,122 @@ This project replaces traditional paper certificates with blockchain-based NFTs 
 
 ## Features
 
-- ✅ ERC-721 Smart Contract (OpenZeppelin)
-- ✅ Local Hardhat blockchain (cost-free)
-- ✅ Admin dashboard for minting certificates
-- ✅ Student dashboard for viewing owned certificates
-- ✅ Verifier dashboard for authenticity checks
-- ✅ MetaMask wallet integration
-- ✅ Certificate revocation system
-- ✅ Local JSON metadata storage
-- ✅ Modern React UI with TailwindCSS
+### Core Features
+- **ERC-721 Smart Contract** (OpenZeppelin implementation)
+- **Local Hardhat blockchain** (cost-free development)
+- **PDF Upload & Storage** - Upload actual certificate documents
+- **Admin dashboard** for minting certificates
+- **Student dashboard** for viewing owned certificates
+- **Verifier dashboard** for authenticity checks
+- **MetaMask wallet integration**
+- **Certificate revocation system**
+- **Modern React UI** with TailwindCSS
+
+### Technical Features
+- **TypeScript** for type safety
+- **Responsive design** (mobile + desktop)
+- **Real-time transaction feedback**
+- **Error handling** and loading states
+- **Hot module reload** for development
+- **Production-ready build**
 
 ## Quick Start
 
-### 1. Install Dependencies
+### Prerequisites
+- Node.js (v18 or higher)
+- MetaMask browser extension
 
+### 1. Install Dependencies
 ```bash
 npm install --legacy-peer-deps
 ```
 
 ### 2. Start Local Blockchain
-
-In a **separate terminal**, run:
-
+**Terminal 1** - Keep this running:
 ```bash
 npm run blockchain
 ```
-
-This starts a local Ethereum node with 20 test accounts (10,000 ETH each). Keep this terminal running.
+This starts a local Ethereum node with 20 test accounts (10,000 ETH each).
 
 ### 3. Deploy Smart Contract
-
-In another terminal:
-
+**Terminal 2**:
 ```bash
 npm run deploy
 ```
-
 This deploys the CertificateNFT contract and saves the configuration.
 
 ### 4. Configure MetaMask
-
 Add the local network to MetaMask:
-
-- **Network Name**: Localhost 8545
+- **Network Name**: Localhost 31337
 - **RPC URL**: `http://127.0.0.1:8545`
-- **Chain ID**: `1337`
+- **Chain ID**: `31337`
 - **Currency Symbol**: ETH
 
 Import a test account using a private key from the Hardhat terminal.
 
 ### 5. Start Frontend
-
+**Terminal 3**:
 ```bash
 npm run dev
 ```
-
 Visit `http://localhost:5173`
 
-## Usage
+## Application Usage
 
 ### Admin Portal (`/admin`)
-
 1. Connect your admin wallet (Account #0 - the deployer)
 2. Fill in student details:
    - Student wallet address
    - Student name
    - Course name
    - Grade
+   - University name
    - Issue date
+   - **Certificate PDF** (optional)
 3. Click "Mint Certificate"
 4. Confirm transaction in MetaMask
-5. Save the downloaded metadata file to `public/metadata/`
+5. Save the downloaded files to `public/metadata/` and `public/certificates/`
 
 ### Student Portal (`/student`)
-
 1. Switch to student account in MetaMask
 2. Connect wallet
 3. View all certificates owned by your address
-4. See complete certificate details and metadata
+4. **View/Download PDF certificates**
+5. See complete certificate details and metadata
 
 ### Verifier Portal (`/verifier`)
-
 1. Enter any wallet address
 2. Click "Verify Certificates"
 3. View all blockchain-verified certificates for that address
+4. **View/Download certificate PDFs**
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Frontend (React)                      │
+│  ┌─────────┐  ┌──────────┐  ┌──────────┐               │
+│  │  Admin  │  │ Student  │  │ Verifier │               │
+│  │  Portal │  │  Portal  │  │  Portal  │               │
+│  └────┬────┘  └────┬─────┘  └────┬─────┘               │
+└───────┼───────────┼──────────────┼──────────────────────┘
+        │           │              │
+        └───────────┴──────────────┘
+                    │
+        ┌───────────▼──────────────┐
+        │   MetaMask (Web3 Wallet) │
+        └───────────┬──────────────┘
+                    │
+        ┌───────────▼──────────────┐
+        │  Hardhat Local Blockchain │
+        │    (Ethereum Network)     │
+        └───────────┬──────────────┘
+                    │
+        ┌───────────▼──────────────┐
+        │  CertificateNFT Contract │
+        │      (ERC-721)           │
+        └──────────────────────────┘
+```
 
 ## Project Structure
 
@@ -124,7 +156,8 @@ Visit `http://localhost:5173`
 │       ├── contract.json           # Contract address
 │       └── abi.json                # Contract ABI
 ├── public/
-│   └── metadata/                   # Certificate metadata
+│   ├── metadata/                   # Certificate metadata
+│   └── certificates/               # Certificate PDF files
 ├── hardhat.config.js               # Hardhat configuration
 └── README.md
 ```
@@ -134,7 +167,6 @@ Visit `http://localhost:5173`
 The `CertificateNFT` contract extends OpenZeppelin's ERC-721 implementation:
 
 ### Key Functions
-
 - `mintCertificate(address student, string memory uri)` - Mint new certificate
 - `getCertificatesByOwner(address owner)` - Get all certificates for address
 - `revokeCertificate(uint256 tokenId)` - Revoke certificate (admin only)
@@ -142,7 +174,6 @@ The `CertificateNFT` contract extends OpenZeppelin's ERC-721 implementation:
 - `tokenURI(uint256 tokenId)` - Get metadata URI
 
 ### Events
-
 - `CertificateMinted(address indexed student, uint256 indexed tokenId, string tokenURI)`
 - `CertificateRevoked(uint256 indexed tokenId)`
 
@@ -162,9 +193,7 @@ The `CertificateNFT` contract extends OpenZeppelin's ERC-721 implementation:
 - **React Router v6** - Navigation
 - **Lucide React** - Icons
 
-## Development
-
-### Available Scripts
+## Available Scripts
 
 ```bash
 npm run dev          # Start development server
@@ -175,22 +204,6 @@ npm run compile      # Compile contracts
 npm run lint         # Lint code
 npm run typecheck    # Type checking
 ```
-
-### Compile Smart Contracts
-
-```bash
-npm run compile
-```
-
-### Deploy to Localhost
-
-```bash
-npm run deploy
-```
-
-### Reset Blockchain
-
-Stop the Hardhat node (Ctrl+C) and restart it to reset state.
 
 ## Metadata Format
 
@@ -204,41 +217,14 @@ Certificate metadata is stored as JSON:
   "course": "Blockchain 101",
   "grade": "A",
   "issueDate": "2025-10-12",
-  "university": "Example University"
+  "university": "MIT",
+  "pdfPath": "http://localhost:5173/certificates/1234567890.pdf"
 }
 ```
 
-## Troubleshooting
-
-### MetaMask Issues
-
-**"Invalid Nonce" Error**
-- Reset account: Settings → Advanced → Clear activity tab data
-
-**Wrong Network**
-- Ensure Chain ID is 1337
-- Switch to "Localhost 8545" network
-
-### Contract Issues
-
-**Contract Not Found**
-- Verify Hardhat node is running
-- Redeploy: `npm run deploy`
-
-**Transaction Failed**
-- Check you're using the correct account
-- Ensure sufficient test ETH
-
-### Metadata Issues
-
-**Metadata Not Loading**
-- Place JSON files in `public/metadata/`
-- Ensure tokenURI matches file path
-- Check file permissions
-
 ## Security Considerations
 
-⚠️ **This is a development setup**
+**Warning: This is a development setup**
 
 - Never use test private keys in production
 - Implement proper access control for production
@@ -258,31 +244,74 @@ For production deployment:
 6. Add comprehensive testing
 7. Conduct security audit
 
+## Use Cases
+
+### Educational Institutions
+- Universities issuing degrees
+- Online courses issuing certificates
+- Training programs issuing certifications
+- Professional development programs
+
+### Verification Scenarios
+- Job applications
+- Professional licensing
+- Academic transfers
+- Background checks
+
+## Troubleshooting
+
+### MetaMask Issues
+**"Invalid Nonce" Error**
+- Reset account: Settings → Advanced → Clear activity tab data
+
+**Wrong Network**
+- Ensure Chain ID is 31337
+- Switch to "Localhost 31337" network
+
+### Contract Issues
+**Contract Not Found**
+- Verify Hardhat node is running
+- Redeploy: `npm run deploy`
+
+**Transaction Failed**
+- Check you're using the correct account
+- Ensure sufficient test ETH
+
+### PDF Issues
+**PDF Not Loading**
+- Place PDF files in `public/certificates/`
+- Ensure pdfPath matches file location
+- Check file permissions
+
 ## Future Enhancements
 
 - [ ] Certificate expiry dates
 - [ ] Batch minting functionality
-- [ ] PDF export with QR codes
-- [ ] IPFS metadata storage
 - [ ] Email notifications
+- [ ] IPFS metadata storage
 - [ ] Multi-signature admin
 - [ ] W3C Verifiable Credentials format
 - [ ] Comprehensive test suite
 - [ ] Gas optimization
 - [ ] Mobile wallet support
 
-## License
+## Project Stats
 
-MIT
-
-## Support
-
-For detailed setup instructions, see [SETUP.md](./SETUP.md)
+- **76 lines** of Solidity
+- **831+ lines** of React/TypeScript
+- **4 page components**
+- **2 utility components**
+- **Comprehensive documentation**
+- **Complete blockchain application**
 
 ## Contributing
 
 Contributions welcome! Please open an issue or submit a pull request.
 
+## License
+
+MIT
+
 ---
 
-Built with blockchain technology for a more trustworthy future in digital credentials.
+**Built with blockchain technology for a more trustworthy future in digital credentials.**

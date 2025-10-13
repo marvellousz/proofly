@@ -113,8 +113,8 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <nav className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-900">
+      <nav className="bg-slate-800/50 backdrop-blur-sm border-b border-slate-700">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Shield size={28} className="text-blue-500" />
@@ -125,12 +125,12 @@ export default function AdminPage() {
       </nav>
 
       <div className="max-w-3xl mx-auto px-6 py-12">
-        <div className="bg-gray-800 rounded-2xl p-8 border border-gray-700 shadow-2xl">
+        <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl p-8 border border-white/10 shadow-2xl backdrop-blur-sm">
           <h2 className="text-2xl font-bold text-white mb-6">Issue New Certificate</h2>
 
           {!adminAddress ? (
             <div className="text-center py-12">
-              <Shield size={64} className="mx-auto text-gray-600 mb-4" />
+              <Shield size={64} className="mx-auto text-slate-600 mb-4" />
               <p className="text-gray-400 text-lg">Connect your admin wallet to mint certificates</p>
             </div>
           ) : (
@@ -146,7 +146,7 @@ export default function AdminPage() {
                   onChange={handleInputChange}
                   placeholder="0x..."
                   required
-                  className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  className="w-full bg-slate-700/50 text-white px-4 py-3 rounded-lg border border-white/10 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all backdrop-blur-sm"
                 />
               </div>
 
@@ -161,7 +161,7 @@ export default function AdminPage() {
                   onChange={handleInputChange}
                   placeholder="John Doe"
                   required
-                  className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  className="w-full bg-slate-700/50 text-white px-4 py-3 rounded-lg border border-white/10 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all backdrop-blur-sm"
                 />
               </div>
 
@@ -176,7 +176,7 @@ export default function AdminPage() {
                   onChange={handleInputChange}
                   placeholder="Blockchain 101"
                   required
-                  className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  className="w-full bg-slate-700/50 text-white px-4 py-3 rounded-lg border border-white/10 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all backdrop-blur-sm"
                 />
               </div>
 
@@ -189,7 +189,7 @@ export default function AdminPage() {
                   value={formData.grade}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  className="w-full bg-slate-700/50 text-white px-4 py-3 rounded-lg border border-white/10 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all backdrop-blur-sm"
                 >
                   <option value="">Select Grade</option>
                   <option value="A+">A+</option>
@@ -215,7 +215,7 @@ export default function AdminPage() {
                   onChange={handleInputChange}
                   placeholder="MIT, Stanford University, etc."
                   required
-                  className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  className="w-full bg-slate-700/50 text-white px-4 py-3 rounded-lg border border-white/10 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all backdrop-blur-sm"
                 />
               </div>
 
@@ -229,7 +229,7 @@ export default function AdminPage() {
                   value={formData.issueDate}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  className="w-full bg-slate-700/50 text-white px-4 py-3 rounded-lg border border-white/10 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all backdrop-blur-sm"
                 />
               </div>
 
@@ -253,14 +253,14 @@ export default function AdminPage() {
               <button
                 type="submit"
                 disabled={isMinting}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-blue-500 to-slate-500 hover:from-blue-600 hover:to-slate-600 text-white font-semibold py-3 rounded-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send size={20} />
                 {isMinting ? 'Minting...' : 'Mint Certificate'}
               </button>
 
               {mintedTokenId && (
-                <div className="bg-green-900/30 border border-green-500 text-green-400 px-4 py-3 rounded-lg">
+                <div className="bg-green-900/30 border border-green-500/50 text-green-400 px-4 py-3 rounded-lg backdrop-blur-sm">
                   Certificate minted successfully! Token ID: {mintedTokenId}
                 </div>
               )}

@@ -63,11 +63,11 @@ export default function VerifierPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-      <nav className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-900">
+      <nav className="bg-slate-800/50 backdrop-blur-sm border-b border-slate-700">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center gap-3">
-            <ShieldCheck size={28} className="text-yellow-500" />
+            <ShieldCheck size={28} className="text-gray-500" />
             <h1 className="text-2xl font-bold text-white">Certificate Verifier</h1>
           </div>
         </div>
@@ -75,7 +75,7 @@ export default function VerifierPage() {
 
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="max-w-2xl mx-auto mb-12">
-          <div className="bg-gray-800 rounded-2xl p-8 border border-gray-700 shadow-2xl">
+          <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 rounded-2xl p-8 border border-white/10 shadow-2xl backdrop-blur-sm">
             <h2 className="text-2xl font-bold text-white mb-6">Verify Certificate Authenticity</h2>
             <p className="text-gray-400 mb-6">
               Enter a wallet address to verify all certificates owned by that address on the blockchain
@@ -91,14 +91,14 @@ export default function VerifierPage() {
                   value={walletAddress}
                   onChange={(e) => setWalletAddress(e.target.value)}
                   placeholder="0x..."
-                  className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500 outline-none transition-all"
+                  className="w-full bg-slate-700/50 text-white px-4 py-3 rounded-lg border border-white/10 focus:border-gray-500/50 focus:ring-2 focus:ring-gray-500/20 outline-none transition-all backdrop-blur-sm"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isVerifying}
-                className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-gradient-to-r from-gray-500 to-slate-600 hover:from-gray-600 hover:to-slate-700 text-white font-semibold py-3 rounded-lg flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Search size={20} />
                 {isVerifying ? 'Verifying...' : 'Verify Certificates'}
@@ -109,12 +109,12 @@ export default function VerifierPage() {
 
         {isVerifying ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-yellow-500 mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-gray-500 mx-auto mb-4"></div>
             <p className="text-gray-400">Verifying on blockchain...</p>
           </div>
         ) : hasSearched && certificates.length === 0 ? (
           <div className="text-center py-12">
-            <ShieldCheck size={80} className="mx-auto text-gray-600 mb-6" />
+            <ShieldCheck size={80} className="mx-auto text-slate-600 mb-6" />
             <h2 className="text-2xl font-bold text-white mb-3">No Certificates Found</h2>
             <p className="text-gray-400">This wallet address does not own any certificates</p>
           </div>
@@ -125,7 +125,7 @@ export default function VerifierPage() {
               <p className="text-gray-400">
                 Found {certificates.length} certificate{certificates.length !== 1 ? 's' : ''} on blockchain
               </p>
-              <div className="mt-4 inline-flex items-center gap-2 bg-green-900/30 border border-green-500 text-green-400 px-4 py-2 rounded-lg">
+              <div className="mt-4 inline-flex items-center gap-2 bg-green-900/30 border border-green-500/50 text-green-400 px-4 py-2 rounded-lg backdrop-blur-sm">
                 <ShieldCheck size={20} />
                 <span className="font-medium">Blockchain Verified</span>
               </div>
