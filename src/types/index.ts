@@ -6,6 +6,7 @@ export interface CertificateMetadata {
   grade: string;
   issueDate: string;
   university: string;
+  pdfPath?: string;
 }
 
 export interface Certificate {

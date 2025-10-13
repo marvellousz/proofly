@@ -1,0 +1,10 @@
+{
+  "name": "Certificate of Completion",
+  "description": "Awarded to Vaibhav Kanodia for completing Web Development in Javascript",
+  "studentName": "Vaibhav Kanodia",
+  "course": "Web Development in Javascript",
+  "grade": "A+",
+  "issueDate": "2025-10-13",
+  "university": "Vellore Institute of Technology, Vellore",
+  "pdfPath": "http://localhost:5173/certificates/1760356826.pdf"
+}

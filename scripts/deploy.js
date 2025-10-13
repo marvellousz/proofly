@@ -19,7 +19,7 @@ async function main() {
 
   const config = {
     contractAddress: contractAddress,
-    chainId: 1337,
+    chainId: 31337,
     network: "localhost"
   };
 

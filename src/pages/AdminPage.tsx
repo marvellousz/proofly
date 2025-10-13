@@ -12,12 +12,24 @@ export default function AdminPage() {
     course: '',
     grade: '',
     issueDate: new Date().toISOString().split('T')[0],
+    university: '',
   });
+  const [certificateFile, setCertificateFile] = useState<File | null>(null);
   const [isMinting, setIsMinting] = useState(false);
   const [mintedTokenId, setMintedTokenId] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type === 'application/pdf') {
+      setCertificateFile(file);
+    } else {
+      alert('Please select a PDF file');
+      e.target.value = '';
+    }
   };
 
   const handleMint = async (e: React.FormEvent) => {
@@ -41,11 +53,31 @@ export default function AdminPage() {
         course: formData.course,
         grade: formData.grade,
         issueDate: formData.issueDate,
-        university: 'Example University',
+        university: formData.university,
       };
 
       const tokenId = Math.floor(Date.now() / 1000);
-      const metadataJSON = JSON.stringify(metadata, null, 2);
+      
+      // Handle PDF file upload
+      let pdfPath = '';
+      if (certificateFile) {
+        // In a real app, you'd upload to IPFS or a server
+        // For now, we'll simulate by copying to public/certificates/
+        pdfPath = `http://localhost:5173/certificates/${tokenId}.pdf`;
+        
+        // Create a download link for the PDF
+        const pdfBlob = new Blob([certificateFile], { type: 'application/pdf' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        const pdfLink = document.createElement('a');
+        pdfLink.href = pdfUrl;
+        pdfLink.download = `${tokenId}.pdf`;
+        pdfLink.click();
+      }
+
+      // Add PDF path to metadata
+      const metadataWithPdf = { ...metadata, pdfPath };
+      
+      const metadataJSON = JSON.stringify(metadataWithPdf, null, 2);
       const blob = new Blob([metadataJSON], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
 
@@ -67,9 +99,11 @@ export default function AdminPage() {
         course: '',
         grade: '',
         issueDate: new Date().toISOString().split('T')[0],
+        university: '',
       });
+      setCertificateFile(null);
 
-      alert(`Certificate minted successfully! Token ID: ${tokenId}\nMetadata file downloaded. Please place it in public/metadata/ directory.`);
+      alert(`Certificate minted successfully! Token ID: ${tokenId}\nMetadata file downloaded. ${certificateFile ? 'PDF file downloaded. ' : ''}Please place files in public/metadata/ and public/certificates/ directories.`);
     } catch (error: any) {
       console.error(error);
       alert(error.message || 'Failed to mint certificate');
@@ -172,6 +206,21 @@ export default function AdminPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
+                  University Name
+                </label>
+                <input
+                  type="text"
+                  name="university"
+                  value={formData.university}
+                  onChange={handleInputChange}
+                  placeholder="MIT, Stanford University, etc."
+                  required
+                  className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Issue Date
                 </label>
                 <input
@@ -182,6 +231,23 @@ export default function AdminPage() {
                   required
                   className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Certificate Document (PDF)
+                </label>
+                <input
+                  type="file"
+                  accept=".pdf"
+                  onChange={handleFileChange}
+                  className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 outline-none transition-all file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-600 file:text-white hover:file:bg-blue-700"
+                />
+                {certificateFile && (
+                  <p className="text-green-400 text-sm mt-2">
+                    ✓ Selected: {certificateFile.name}
+                  </p>
+                )}
               </div>
 
               <button

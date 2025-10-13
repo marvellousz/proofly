@@ -1,4 +1,4 @@
-import { Award, Calendar, BookOpen, GraduationCap, AlertCircle } from 'lucide-react';
+import { Award, Calendar, BookOpen, GraduationCap, AlertCircle, FileText, Download, Eye } from 'lucide-react';
 import { Certificate } from '../types';
 
 interface CertificateCardProps {
@@ -62,7 +62,31 @@ export default function CertificateCard({ certificate }: CertificateCardProps) {
       </div>
 
       <div className="pt-4 border-t border-gray-700">
-        <p className="text-sm text-gray-400">{metadata.university}</p>
+        <p className="text-sm text-gray-400 mb-3">{metadata.university}</p>
+        
+        {metadata.pdfPath && (
+          <div className="flex gap-2">
+            <button
+              onClick={() => window.open(metadata.pdfPath, '_blank')}
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+            >
+              <Eye size={16} />
+              View PDF
+            </button>
+            <button
+              onClick={() => {
+                const link = document.createElement('a');
+                link.href = metadata.pdfPath!;
+                link.download = `certificate-${tokenId}.pdf`;
+                link.click();
+              }}
+              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+            >
+              <Download size={16} />
+              Download
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

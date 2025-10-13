@@ -1,0 +1,10 @@
+{
+  "name": "Certificate of Completion",
+  "description": "Awarded to Pranav Murali for completing Artificial Intelligence",
+  "studentName": "Pranav Murali",
+  "course": "Artificial Intelligence",
+  "grade": "B+",
+  "issueDate": "2025-10-13",
+  "university": "Vellore Institute of Technology, Vellore",
+  "pdfPath": "http://localhost:5173/certificates/1760341346.pdf"
+}
