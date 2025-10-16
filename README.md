@@ -1,4 +1,4 @@
-# NFT-Based Certificate Issuer
+# proofly
 
 A complete full-stack blockchain application for issuing tamper-proof educational certificates as NFTs using Ethereum smart contracts. The system runs entirely offline on a local blockchain with zero gas costs.
 
