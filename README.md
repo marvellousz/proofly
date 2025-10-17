@@ -1,317 +1,193 @@
 # proofly
 
-A complete full-stack blockchain application for issuing tamper-proof educational certificates as NFTs using Ethereum smart contracts. The system runs entirely offline on a local blockchain with zero gas costs.
+A blockchain-powered platform for issuing tamper-proof educational certificates as NFTs. No forgery, complete ownership, instant verification.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
 ## Overview
 
-This project replaces traditional paper certificates with blockchain-based NFTs (ERC-721 standard), providing:
+Proofly replaces traditional paper certificates with blockchain-based NFTs (ERC-721 standard), eliminating forgery and providing true digital ownership. The system runs on a local Ethereum blockchain with zero gas costs during development.
 
-- **Universities** can mint certificates as NFTs to student wallets
-- **Students** truly own their certificates in their wallet forever
-- **Employers** can verify certificate authenticity directly on-chain
-- **No Forgery** - certificates are immutable and tamper-proof
+**Who it's for:** Educational institutions, training programs, employers verifying credentials, and students who want true ownership of their achievements.
+
+## Tech Stack
+
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS
+- **Blockchain**: Hardhat (Local Ethereum Node)
+- **Smart Contracts**: Solidity 0.8.20, OpenZeppelin (ERC-721)
+- **Web3**: Ethers.js v6, MetaMask Integration
+- **Routing**: React Router v6
+- **Icons**: Lucide React
 
 ## Features
 
-### Core Features
-- **ERC-721 Smart Contract** (OpenZeppelin implementation)
-- **Local Hardhat blockchain** (cost-free development)
-- **PDF Upload & Storage** - Upload actual certificate documents
-- **Admin dashboard** for minting certificates
-- **Student dashboard** for viewing owned certificates
-- **Verifier dashboard** for authenticity checks
-- **MetaMask wallet integration**
-- **Certificate revocation system**
-- **Modern React UI** with TailwindCSS
+- **Blockchain Certificates**: Issue certificates as tamper-proof ERC-721 NFTs
+- **True Ownership**: Students truly own certificates in their wallet forever
+- **Instant Verification**: Employers verify authenticity directly on-chain
+- **PDF Storage**: Upload and attach actual certificate documents
+- **Three-Portal System**: Separate dashboards for admins, students, and verifiers
+- **Certificate Revocation**: Admin ability to revoke certificates when needed
+- **Local Development**: Cost-free development on local blockchain
+- **MetaMask Integration**: Secure wallet connection for all interactions
 
-### Technical Features
-- **TypeScript** for type safety
-- **Responsive design** (mobile + desktop)
-- **Real-time transaction feedback**
-- **Error handling** and loading states
-- **Hot module reload** for development
-- **Production-ready build**
+## Installation
 
-## Quick Start
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/marvellousz/proofly.git
+   cd proofly
+   ```
 
-### Prerequisites
-- Node.js (v18 or higher)
-- MetaMask browser extension
+2. **Install dependencies**
+   ```bash
+   npm install --legacy-peer-deps
+   ```
 
-### 1. Install Dependencies
-```bash
-npm install --legacy-peer-deps
-```
+3. **Start local blockchain** (Terminal 1)
+   ```bash
+   npm run blockchain
+   ```
+   
+   This starts a local Ethereum node with 20 test accounts (10,000 ETH each). Keep this terminal running.
 
-### 2. Start Local Blockchain
-**Terminal 1** - Keep this running:
-```bash
-npm run blockchain
-```
-This starts a local Ethereum node with 20 test accounts (10,000 ETH each).
+4. **Deploy smart contract** (Terminal 2)
+   ```bash
+   npm run deploy
+   ```
+   
+   This deploys the CertificateNFT contract and saves the configuration.
 
-### 3. Deploy Smart Contract
-**Terminal 2**:
-```bash
-npm run deploy
-```
-This deploys the CertificateNFT contract and saves the configuration.
+5. **Configure MetaMask**
+   
+   Add the local network to MetaMask:
+   - **Network Name**: Localhost 31337
+   - **RPC URL**: `http://127.0.0.1:8545`
+   - **Chain ID**: `31337`
+   - **Currency Symbol**: ETH
+   
+   Import a test account using a private key from the Hardhat terminal output.
 
-### 4. Configure MetaMask
-Add the local network to MetaMask:
-- **Network Name**: Localhost 31337
-- **RPC URL**: `http://127.0.0.1:8545`
-- **Chain ID**: `31337`
-- **Currency Symbol**: ETH
+6. **Start the application** (Terminal 3)
+   ```bash
+   npm run dev
+   ```
 
-Import a test account using a private key from the Hardhat terminal.
+Visit `http://localhost:5173` to use the application.
 
-### 5. Start Frontend
-**Terminal 3**:
-```bash
-npm run dev
-```
-Visit `http://localhost:5173`
-
-## Application Usage
+## Usage
 
 ### Admin Portal (`/admin`)
-1. Connect your admin wallet (Account #0 - the deployer)
-2. Fill in student details:
+
+1. **Connect wallet** - Use Account #0 (the deployer/admin account)
+2. **Fill in certificate details**:
    - Student wallet address
    - Student name
    - Course name
    - Grade
    - University name
    - Issue date
-   - **Certificate PDF** (optional)
-3. Click "Mint Certificate"
-4. Confirm transaction in MetaMask
-5. Save the downloaded files to `public/metadata/` and `public/certificates/`
+   - Certificate PDF (optional)
+3. **Click "Mint Certificate"** to create the NFT
+4. **Confirm transaction** in MetaMask
+5. **Save the downloaded files** to `public/metadata/` and `public/certificates/`
+6. **Certificate is issued** - student now owns the NFT
 
 ### Student Portal (`/student`)
-1. Switch to student account in MetaMask
-2. Connect wallet
-3. View all certificates owned by your address
-4. **View/Download PDF certificates**
-5. See complete certificate details and metadata
+
+1. **Switch to student account** in MetaMask
+2. **Connect wallet**
+3. **View all certificates** owned by your address
+4. **View/Download PDFs** of your certificates
+5. **See complete details** including course, grade, and issue date
 
 ### Verifier Portal (`/verifier`)
-1. Enter any wallet address
-2. Click "Verify Certificates"
-3. View all blockchain-verified certificates for that address
+
+1. **Enter wallet address** to verify
+2. **Click "Verify Certificates"**
+3. **View blockchain-verified certificates** for that address
 4. **View/Download certificate PDFs**
+5. **No account required** - verification is public and instant
 
-## Architecture
+## Deployment
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Frontend (React)                      │
-│  ┌─────────┐  ┌──────────┐  ┌──────────┐               │
-│  │  Admin  │  │ Student  │  │ Verifier │               │
-│  │  Portal │  │  Portal  │  │  Portal  │               │
-│  └────┬────┘  └────┬─────┘  └────┬─────┘               │
-└───────┼───────────┼──────────────┼──────────────────────┘
-        │           │              │
-        └───────────┴──────────────┘
-                    │
-        ┌───────────▼──────────────┐
-        │   MetaMask (Web3 Wallet) │
-        └───────────┬──────────────┘
-                    │
-        ┌───────────▼──────────────┐
-        │  Hardhat Local Blockchain │
-        │    (Ethereum Network)     │
-        └───────────┬──────────────┘
-                    │
-        ┌───────────▼──────────────┐
-        │  CertificateNFT Contract │
-        │      (ERC-721)           │
-        └──────────────────────────┘
-```
+### Local Development (Current Setup)
 
-## Project Structure
+The application is currently configured for local development with a Hardhat blockchain node.
 
-```
-├── contracts/
-│   └── CertificateNFT.sol          # ERC-721 smart contract
-├── scripts/
-│   ├── deploy.js                   # Contract deployment
-│   ├── mint.js                     # Example minting script
-│   └── setup.sh                    # Quick setup script
-├── src/
-│   ├── components/
-│   │   ├── WalletConnect.tsx       # Wallet connection UI
-│   │   └── CertificateCard.tsx     # Certificate display
-│   ├── pages/
-│   │   ├── HomePage.tsx            # Landing page
-│   │   ├── AdminPage.tsx           # Admin dashboard
-│   │   ├── StudentPage.tsx         # Student dashboard
-│   │   └── VerifierPage.tsx        # Verifier dashboard
-│   ├── lib/
-│   │   └── blockchain.ts           # Web3 utilities
-│   ├── types/
-│   │   └── index.ts                # TypeScript types
-│   └── config/
-│       ├── contract.json           # Contract address
-│       └── abi.json                # Contract ABI
-├── public/
-│   ├── metadata/                   # Certificate metadata
-│   └── certificates/               # Certificate PDF files
-├── hardhat.config.js               # Hardhat configuration
-└── README.md
-```
+### Testnet Deployment (Recommended for Testing)
 
-## Smart Contract
+1. **Update `hardhat.config.js`** with testnet configuration:
+   ```javascript
+   networks: {
+     sepolia: {
+       url: process.env.SEPOLIA_RPC_URL,
+       accounts: [process.env.PRIVATE_KEY]
+     }
+   }
+   ```
 
-The `CertificateNFT` contract extends OpenZeppelin's ERC-721 implementation:
+2. **Add environment variables**:
+   ```env
+   SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/YOUR_API_KEY
+   PRIVATE_KEY=your_wallet_private_key
+   ```
 
-### Key Functions
-- `mintCertificate(address student, string memory uri)` - Mint new certificate
-- `getCertificatesByOwner(address owner)` - Get all certificates for address
-- `revokeCertificate(uint256 tokenId)` - Revoke certificate (admin only)
-- `isRevoked(uint256 tokenId)` - Check revocation status
-- `tokenURI(uint256 tokenId)` - Get metadata URI
+3. **Deploy to testnet**:
+   ```bash
+   npx hardhat run scripts/deploy.js --network sepolia
+   ```
 
-### Events
-- `CertificateMinted(address indexed student, uint256 indexed tokenId, string tokenURI)`
-- `CertificateRevoked(uint256 indexed tokenId)`
+4. **Update frontend configuration** with new contract address
 
-## Technology Stack
+### Production Deployment (Mainnet)
 
-### Blockchain
-- **Hardhat** - Local Ethereum development environment
-- **Solidity 0.8.20** - Smart contract language
-- **OpenZeppelin** - Secure ERC-721 implementation
-- **Ethers.js v6** - Ethereum library
+**Warning: Production deployment requires careful security considerations**
 
-### Frontend
-- **React 18** - UI framework
-- **TypeScript** - Type safety
-- **Vite** - Build tool
-- **TailwindCSS** - Styling
-- **React Router v6** - Navigation
-- **Lucide React** - Icons
+1. **Use hardware wallet** for contract deployment
+2. **Conduct security audit** of smart contracts
+3. **Store metadata on IPFS** instead of local storage
+4. **Implement access control** for admin functions
+5. **Add comprehensive testing**
+6. **Deploy frontend** to Vercel/Netlify
+7. **Update RPC endpoints** to mainnet providers
 
-## Available Scripts
+### Environment Variables for Production
 
-```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run blockchain   # Start local blockchain
-npm run deploy       # Deploy smart contract
-npm run compile      # Compile contracts
-npm run lint         # Lint code
-npm run typecheck    # Type checking
-```
-
-## Metadata Format
-
-Certificate metadata is stored as JSON:
-
-```json
-{
-  "name": "Certificate of Completion",
-  "description": "Awarded to Alice for completing Blockchain 101",
-  "studentName": "Alice Johnson",
-  "course": "Blockchain 101",
-  "grade": "A",
-  "issueDate": "2025-10-12",
-  "university": "MIT",
-  "pdfPath": "http://localhost:5173/certificates/1234567890.pdf"
-}
-```
-
-## Security Considerations
-
-**Warning: This is a development setup**
-
-- Never use test private keys in production
-- Implement proper access control for production
-- Use secure key management solutions
-- Store metadata on IPFS for production
-- Conduct security audits before mainnet deployment
-
-## Production Deployment
-
-For production deployment:
-
-1. Update `hardhat.config.js` with mainnet/testnet RPC
-2. Use proper wallet management (hardware wallet recommended)
-3. Deploy to testnet first (Sepolia, Goerli)
-4. Store metadata on IPFS
-5. Implement proper access controls
-6. Add comprehensive testing
-7. Conduct security audit
-
-## Use Cases
-
-### Educational Institutions
-- Universities issuing degrees
-- Online courses issuing certificates
-- Training programs issuing certifications
-- Professional development programs
-
-### Verification Scenarios
-- Job applications
-- Professional licensing
-- Academic transfers
-- Background checks
-
-## Troubleshooting
-
-### MetaMask Issues
-**"Invalid Nonce" Error**
-- Reset account: Settings → Advanced → Clear activity tab data
-
-**Wrong Network**
-- Ensure Chain ID is 31337
-- Switch to "Localhost 31337" network
-
-### Contract Issues
-**Contract Not Found**
-- Verify Hardhat node is running
-- Redeploy: `npm run deploy`
-
-**Transaction Failed**
-- Check you're using the correct account
-- Ensure sufficient test ETH
-
-### PDF Issues
-**PDF Not Loading**
-- Place PDF files in `public/certificates/`
-- Ensure pdfPath matches file location
-- Check file permissions
-
-## Future Enhancements
-
-- [ ] Certificate expiry dates
-- [ ] Batch minting functionality
-- [ ] Email notifications
-- [ ] IPFS metadata storage
-- [ ] Multi-signature admin
-- [ ] W3C Verifiable Credentials format
-- [ ] Comprehensive test suite
-- [ ] Gas optimization
-- [ ] Mobile wallet support
-
-## Project Stats
-
-- **76 lines** of Solidity
-- **831+ lines** of React/TypeScript
-- **4 page components**
-- **2 utility components**
-- **Comprehensive documentation**
-- **Complete blockchain application**
+- `ETHEREUM_RPC_URL`: Mainnet RPC endpoint
+- `CONTRACT_ADDRESS`: Deployed contract address
+- `IPFS_GATEWAY`: IPFS gateway URL
+- `ADMIN_ADDRESSES`: Authorized admin wallet addresses
 
 ## Contributing
 
-Contributions welcome! Please open an issue or submit a pull request.
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-MIT
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+- **Email**: pranavmurali024@gmail.com
+- **GitHub**: [https://github.com/marvellousz/proofly](https://github.com/marvellousz/proofly)
 
 ---
 
-**Built with blockchain technology for a more trustworthy future in digital credentials.**
+Built with blockchain technology for a more trustworthy future in digital credentials.
