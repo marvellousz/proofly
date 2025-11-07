@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import { Shield, Send } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Shield, Send, AlertCircle } from 'lucide-react';
 import WalletConnect from '../components/WalletConnect';
-import { connectWallet, getContract } from '../lib/blockchain';
+import { connectWallet, getContract, getProvider } from '../lib/blockchain';
 import { CertificateMetadata } from '../types';
 
 export default function AdminPage() {
   const [adminAddress, setAdminAddress] = useState<string | null>(null);
+  const [contractOwner, setContractOwner] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     studentAddress: '',
     studentName: '',
@@ -32,6 +33,24 @@ export default function AdminPage() {
     }
   };
 
+  // Fetch contract owner when wallet connects
+  useEffect(() => {
+    const fetchContractOwner = async () => {
+      try {
+        const provider = getProvider();
+        if (provider) {
+          const contract = await getContract(provider);
+          const owner = await contract.owner();
+          setContractOwner(owner);
+        }
+      } catch (error) {
+        console.error('Failed to fetch contract owner:', error);
+      }
+    };
+
+    fetchContractOwner();
+  }, [adminAddress]);
+
   const handleMint = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!adminAddress) {
@@ -45,6 +64,21 @@ export default function AdminPage() {
     try {
       const { signer } = await connectWallet();
       const contract = await getContract(signer);
+      const connectedAddress = await signer.getAddress();
+
+      // Check if connected wallet is the contract owner
+      const contractOwner = await contract.owner();
+      if (connectedAddress.toLowerCase() !== contractOwner.toLowerCase()) {
+        alert(
+          `❌ Error: You are not the contract owner!\n\n` +
+          `Connected address: ${connectedAddress}\n` +
+          `Contract owner: ${contractOwner}\n\n` +
+          `Please switch to the admin account (Account #0) in MetaMask.\n` +
+          `This is the account that deployed the contract.`
+        );
+        setIsMinting(false);
+        return;
+      }
 
       const metadata: CertificateMetadata = {
         name: 'Certificate of Completion',
@@ -64,32 +98,45 @@ export default function AdminPage() {
         // In a real app, you'd upload to IPFS or a server
         // For now, we'll simulate by copying to public/certificates/
         pdfPath = `http://localhost:5173/certificates/${tokenId}.pdf`;
-        
-        // Create a download link for the PDF
-        const pdfBlob = new Blob([certificateFile], { type: 'application/pdf' });
-        const pdfUrl = URL.createObjectURL(pdfBlob);
-        const pdfLink = document.createElement('a');
-        pdfLink.href = pdfUrl;
-        pdfLink.download = `${tokenId}.pdf`;
-        pdfLink.click();
       }
 
       // Add PDF path to metadata
       const metadataWithPdf = { ...metadata, pdfPath };
       
       const metadataJSON = JSON.stringify(metadataWithPdf, null, 2);
-      const blob = new Blob([metadataJSON], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-
       const tokenURI = `http://localhost:5173/metadata/${tokenId}.json`;
 
+      // Mint the certificate on blockchain
       const tx = await contract.mintCertificate(formData.studentAddress, tokenURI);
       await tx.wait();
 
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${tokenId}.json`;
-      link.click();
+      // Download JSON metadata file first
+      const jsonBlob = new Blob([metadataJSON], { type: 'application/json' });
+      const jsonUrl = URL.createObjectURL(jsonBlob);
+      const jsonLink = document.createElement('a');
+      jsonLink.href = jsonUrl;
+      jsonLink.download = `${tokenId}.json`;
+      document.body.appendChild(jsonLink);
+      jsonLink.click();
+      document.body.removeChild(jsonLink);
+      
+      // Clean up URL after a short delay
+      setTimeout(() => URL.revokeObjectURL(jsonUrl), 100);
+
+      // Download PDF file with a delay (browsers block multiple simultaneous downloads)
+      if (certificateFile) {
+        setTimeout(() => {
+          const pdfBlob = new Blob([certificateFile], { type: 'application/pdf' });
+          const pdfUrl = URL.createObjectURL(pdfBlob);
+          const pdfLink = document.createElement('a');
+          pdfLink.href = pdfUrl;
+          pdfLink.download = `${tokenId}.pdf`;
+          document.body.appendChild(pdfLink);
+          pdfLink.click();
+          document.body.removeChild(pdfLink);
+          setTimeout(() => URL.revokeObjectURL(pdfUrl), 100);
+        }, 500); // 500ms delay to avoid browser blocking
+      }
 
       setMintedTokenId(tokenId.toString());
 
@@ -103,10 +150,37 @@ export default function AdminPage() {
       });
       setCertificateFile(null);
 
-      alert(`Certificate minted successfully! Token ID: ${tokenId}\nMetadata file downloaded. ${certificateFile ? 'PDF file downloaded. ' : ''}Please place files in public/metadata/ and public/certificates/ directories.`);
+      alert(`Certificate minted successfully! Token ID: ${tokenId}\n\nFiles are downloading:\n- JSON metadata file (downloaded now)\n${certificateFile ? '- PDF certificate file (downloading in 0.5s)\n' : ''}\nPlease save both files to:\n- public/metadata/${tokenId}.json\n${certificateFile ? `- public/certificates/${tokenId}.pdf\n` : ''}`);
     } catch (error: any) {
       console.error(error);
-      alert(error.message || 'Failed to mint certificate');
+      
+      // Handle specific error cases
+      let errorMessage = 'Failed to mint certificate';
+      
+      if (error.data) {
+        // Check for OwnableUnauthorizedAccount error (0x118cdaa7)
+        const errorData = typeof error.data === 'string' ? error.data : error.data.data || error.data.toString();
+        if (errorData && errorData.includes('0x118cdaa7')) {
+          errorMessage = 
+            '❌ Error: You are not the contract owner!\n\n' +
+            'Please switch to the admin account (Account #0) in MetaMask.\n' +
+            'This is the account that deployed the contract.';
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+      } else if (error.message) {
+        errorMessage = error.message;
+        
+        // Check for common error messages
+        if (error.message.includes('execution reverted') || error.message.includes('OwnableUnauthorizedAccount')) {
+          errorMessage = 
+            '❌ Error: You are not the contract owner!\n\n' +
+            'Please switch to the admin account (Account #0) in MetaMask.\n' +
+            'This is the account that deployed the contract.';
+        }
+      }
+      
+      alert(errorMessage);
     } finally {
       setIsMinting(false);
     }
@@ -135,6 +209,24 @@ export default function AdminPage() {
             </div>
           ) : (
             <form onSubmit={handleMint} className="space-y-6">
+              {contractOwner && adminAddress && adminAddress.toLowerCase() !== contractOwner.toLowerCase() && (
+                <div className="bg-red-900/30 border border-red-500/50 text-red-400 px-4 py-3 rounded-lg backdrop-blur-sm flex items-start gap-3">
+                  <AlertCircle size={20} className="mt-0.5 flex-shrink-0" />
+                  <div className="flex-1">
+                    <p className="font-semibold mb-1">⚠️ Warning: Connected wallet is not the contract owner</p>
+                    <p className="text-sm text-red-300/80 mb-2">
+                      You can only mint certificates with the account that deployed the contract.
+                    </p>
+                    <div className="text-xs font-mono space-y-1 mt-2">
+                      <p><span className="text-red-300">Connected:</span> {adminAddress}</p>
+                      <p><span className="text-red-300">Contract Owner:</span> {contractOwner}</p>
+                    </div>
+                    <p className="text-sm text-red-300/80 mt-2">
+                      Please switch to Account #0 (the deployer account) in MetaMask to mint certificates.
+                    </p>
+                  </div>
+                </div>
+              )}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Student Wallet Address

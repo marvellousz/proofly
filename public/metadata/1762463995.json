@@ -1,0 +1,10 @@
+{
+  "name": "Certificate of Completion",
+  "description": "Awarded to Pranav Murali for completing Introduction to Linux",
+  "studentName": "Pranav Murali",
+  "course": "Introduction to Linux",
+  "grade": "A",
+  "issueDate": "2025-11-06",
+  "university": "Vellore Institute of Technology",
+  "pdfPath": "http://localhost:5173/certificates/1762463995.pdf"
+}

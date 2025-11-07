@@ -1,0 +1,10 @@
+{
+  "name": "Certificate of Completion",
+  "description": "Awarded to Pranav Murali for completing Git & Github",
+  "studentName": "Pranav Murali",
+  "course": "Git & Github",
+  "grade": "A+",
+  "issueDate": "2025-11-06",
+  "university": "Vellore Institute of Technology",
+  "pdfPath": "http://localhost:5173/certificates/1762402375.pdf"
+}
